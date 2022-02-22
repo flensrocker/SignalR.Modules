@@ -1,4 +1,5 @@
-﻿using WeatherModule.Shared;
+using System;
+using WeatherModule.Shared;
 
 namespace WeatherModule.Client
 {
@@ -6,9 +7,9 @@ namespace WeatherModule.Client
     {
         public WeatherForecast[] Data { get; private set; }
 
-        public ReceivedWeatherUpdateEventArgs(WeatherForecast[] weatherForecast)
+        public ReceivedWeatherUpdateEventArgs(WeatherForecast[]? weatherForecast)
         {
-            Data = weatherForecast;
+            Data = weatherForecast ?? Array.Empty<WeatherForecast>();
         }
     }
 }

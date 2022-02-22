@@ -33,32 +33,37 @@
 </ul>
 
 @code {
-	private HubConnection hubConnection;
-	private List<string> messages = new List<string>();
-	private string userInput;
-	private string messageInput;
+    private HubConnection? hubConnection;
+    private List<string> messages = new List<string>();
+    private string userInput = "";
+    private string messageInput = "";
 
-	protected override async Task OnInitializedAsync()
-	{
-		hubConnection = new HubConnectionBuilder()
-			.WithUrl(NavigationManager.ToAbsoluteUri("/hub"))
-			.Build();
+    protected override async Task OnInitializedAsync()
+    {
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri("/hub"))
+            .Build();
 
-		hubConnection.On<string, string>("ChatHub_ReceiveMessage", (user, message) =>
-		{
-			var encodedMsg = $"{user}: {message}";
-			messages.Add(encodedMsg);
-			StateHasChanged();
-		});
+        hubConnection.On<string, string>("ChatHub_ReceiveMessage", (user, message) =>
+        {
+            var encodedMsg = $"{user}: {message}";
+            messages.Add(encodedMsg);
+            StateHasChanged();
+        });
 
-		await hubConnection.StartAsync();
-	}
+        await hubConnection.StartAsync();
+    }
 
-	async Task Send() =>
-		await hubConnection.SendAsync("ChatHub_SendMessage", userInput, messageInput);
+    async Task Send()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.SendAsync("ChatHub_SendMessage", userInput, messageInput);
+        }
+    }
 
 	public bool IsConnected =>
-		hubConnection.State == HubConnectionState.Connected;
+		hubConnection?.State == HubConnectionState.Connected;
 
 	public async ValueTask DisposeAsync()
 	{

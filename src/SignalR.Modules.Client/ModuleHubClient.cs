@@ -69,7 +69,7 @@ namespace SignalR.Modules.Client
             }
         }
 
-        public string ConnectionId
+        public string? ConnectionId
         {
             get
             {
@@ -78,7 +78,7 @@ namespace SignalR.Modules.Client
             }
         }
 
-        public IDisposable On(string methodName, Type[] parameterTypes, Func<object[], object, Task> handler, object state)
+        public IDisposable On(string methodName, Type[] parameterTypes, Func<object?[], object, Task> handler, object state)
         {
             CheckState();
             var hubConnectionSubscription = _connectionManager.On(this, methodName, parameterTypes, handler, state);
@@ -96,7 +96,7 @@ namespace SignalR.Modules.Client
             await _connectionManager.EnsureConnectionStartedAsync(this);
         }
 
-        public async Task<object> InvokeCoreAsync(string methodName, Type returnType, object[] args, CancellationToken cancellationToken = default)
+        public async Task<object?> InvokeCoreAsync(string methodName, Type returnType, object?[] args, CancellationToken cancellationToken = default)
         {
             CheckState();
             return await _connectionManager.InvokeAsync(this, methodName, returnType, args, cancellationToken);
@@ -108,29 +108,29 @@ namespace SignalR.Modules.Client
             return _connectionManager.SendAsync(this, methodName, args, cancellationToken);
         }
 
-        public async Task<ChannelReader<object>> StreamAsChannelCoreAsync(string methodName, Type returnType, object[] args, CancellationToken cancellationToken = default)
+        public async Task<ChannelReader<object?>> StreamAsChannelCoreAsync(string methodName, Type returnType, object?[] args, CancellationToken cancellationToken = default)
         {
             CheckState();
             return await _connectionManager.StreamAsChannelAsync(this, methodName, returnType, args, cancellationToken);
         }
 
-        public IAsyncEnumerable<TResult> StreamAsyncCore<TResult>(string methodName, object[] args, CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<TResult> StreamAsyncCore<TResult>(string methodName, object?[] args, CancellationToken cancellationToken = default)
         {
             CheckState();
             return _connectionManager.StreamAsyncCore<TResult>(this, methodName, args, cancellationToken);
         }
 
-        public virtual Task OnConnectionReconnected(string arg)
+        public virtual Task OnConnectionReconnected(string? arg)
         {
             return Task.CompletedTask;
         }
 
-        public virtual Task OnConnectionReconnecting(Exception arg)
+        public virtual Task OnConnectionReconnecting(Exception? arg)
         {
             return Task.CompletedTask;
         }
 
-        public virtual Task OnConnectionClosed(Exception arg)
+        public virtual Task OnConnectionClosed(Exception? arg)
         {
             return Task.CompletedTask;
         }

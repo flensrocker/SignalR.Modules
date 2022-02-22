@@ -47,13 +47,13 @@ namespace SignalR.Modules.Client
             _clients.TryRemove(client, out _);
         }
 
-        public IDisposable On(ModuleHubClient client, string methodName, Type[] parameterTypes, Func<object[], object, Task> handler, object state)
+        public IDisposable On(ModuleHubClient client, string methodName, Type[] parameterTypes, Func<object?[], object, Task> handler, object state)
         {
             var connection = ValidateClientAndGetConnection(client);
             return connection.On($"{client.ModuleHubName}_{methodName}", parameterTypes, handler, state);
         }
 
-        public async Task<object> InvokeAsync(ModuleHubClient client, string methodName, Type returnType, object[] args, CancellationToken cancellationToken = default)
+        public async Task<object?> InvokeAsync(ModuleHubClient client, string methodName, Type returnType, object?[] args, CancellationToken cancellationToken = default)
         {
             var connection = ValidateClientAndGetConnection(client);
             return await connection.InvokeCoreAsync($"{client.ModuleHubName}_{methodName}", returnType, args, cancellationToken);
@@ -65,13 +65,13 @@ namespace SignalR.Modules.Client
             await connection.SendCoreAsync($"{client.ModuleHubName}_{methodName}", args, cancellationToken);
         }
 
-        public async Task<ChannelReader<object>> StreamAsChannelAsync(ModuleHubClient client, string methodName, Type returnType, object[] args, CancellationToken cancellationToken = default)
+        public async Task<ChannelReader<object?>> StreamAsChannelAsync(ModuleHubClient client, string methodName, Type returnType, object?[] args, CancellationToken cancellationToken = default)
         {
             var connection = ValidateClientAndGetConnection(client);
             return await connection.StreamAsChannelCoreAsync($"{client.ModuleHubName}_{methodName}", returnType, args, cancellationToken);
         }
 
-        public IAsyncEnumerable<TResult> StreamAsyncCore<TResult>(ModuleHubClient client, string methodName, object[] args, CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<TResult> StreamAsyncCore<TResult>(ModuleHubClient client, string methodName, object?[] args, CancellationToken cancellationToken = default)
         {
             var connection = ValidateClientAndGetConnection(client);
             return connection.StreamAsyncCore<TResult>($"{client.ModuleHubName}_{methodName}", args, cancellationToken);
@@ -116,7 +116,7 @@ namespace SignalR.Modules.Client
             return connection.State;
         }
 
-        public string GetConnectionId(ModuleHubClient client)
+        public string? GetConnectionId(ModuleHubClient client)
         {
             var connection = ValidateClientAndGetConnection(client);
             return connection.ConnectionId;
